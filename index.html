@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ludovic AIMÉ — Expert Mainframe · Développeur Web MERN</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0b1628;
+    --navy-mid: #112240;
+    --navy-light: #1d3461;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --cream: #f0ead6;
+    --white: #f8f6f0;
+    --muted: #8899aa;
+    --mono: 'IBM Plex Mono', monospace;
+    --serif: 'Playfair Display', serif;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--navy);
+    color: var(--white);
+    font-family: var(--sans);
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── GRID TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(201,168,76,.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.2rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(12px);
+    background: rgba(11,22,40,.85);
+    border-bottom: 1px solid rgba(201,168,76,.15);
+  }
+
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: .8rem;
+    color: var(--gold);
+    letter-spacing: .2em;
+    text-transform: uppercase;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: .75rem;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: .1em;
+    transition: color .25s;
+  }
+
+  .nav-links a:hover { color: var(--gold); }
+
+  /* ── HERO ── */
+  #hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8rem 3rem 4rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .hero-tag {
+    font-family: var(--mono);
+    font-size: .75rem;
+    color: var(--gold);
+    letter-spacing: .3em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp .6s ease forwards .2s;
+  }
+
+  .hero-name {
+    font-family: var(--serif);
+    font-size: clamp(3.5rem, 9vw, 8rem);
+    font-weight: 900;
+    line-height: .95;
+    letter-spacing: -.02em;
+    color: var(--white);
+    opacity: 0;
+    animation: fadeUp .7s ease forwards .4s;
+  }
+
+  .hero-name span {
+    color: var(--gold);
+  }
+
+  .hero-subtitle {
+    margin-top: 2rem;
+    font-family: var(--mono);
+    font-size: .9rem;
+    color: var(--muted);
+    letter-spacing: .08em;
+    opacity: 0;
+    animation: fadeUp .7s ease forwards .6s;
+  }
+
+  .hero-subtitle .sep { color: var(--gold); margin: 0 .6em; }
+
+  .hero-profile {
+    margin-top: 2.5rem;
+    max-width: 620px;
+    font-size: 1rem;
+    color: rgba(240,234,214,.75);
+    line-height: 1.8;
+    opacity: 0;
+    animation: fadeUp .7s ease forwards .8s;
+  }
+
+  .hero-cta {
+    margin-top: 2.5rem;
+    display: flex;
+    gap: 1.2rem;
+    opacity: 0;
+    animation: fadeUp .7s ease forwards 1s;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: .75rem 1.8rem;
+    font-family: var(--mono);
+    font-size: .78rem;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: all .25s;
+    cursor: pointer;
+  }
+
+  .btn-primary {
+    background: var(--gold);
+    color: var(--navy);
+    border: 2px solid var(--gold);
+    font-weight: 500;
+  }
+  .btn-primary:hover { background: var(--gold-light); border-color: var(--gold-light); }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--gold);
+    border: 2px solid rgba(201,168,76,.4);
+  }
+  .btn-outline:hover { border-color: var(--gold); background: rgba(201,168,76,.06); }
+
+  /* ── PHOTO ── */
+  .hero-photo {
+    position: absolute;
+    right: 3rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 180px;
+    height: 210px;
+    object-fit: cover;
+    border-radius: 3px;
+    border: 2px solid rgba(201,168,76,.3);
+    box-shadow: 0 0 40px rgba(201,168,76,.1), 0 20px 60px rgba(0,0,0,.4);
+    opacity: 0;
+    animation: fadeUp .7s ease forwards 1s;
+  }
+
+  @media (max-width: 900px) { .hero-photo { display: none; } }
+
+  /* ── SCROLL INDICATOR ── */
+  .scroll-hint {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 3rem;
+    font-family: var(--mono);
+    font-size: .7rem;
+    color: var(--muted);
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    opacity: 0;
+    animation: fadeUp .7s ease forwards 1.2s;
+  }
+
+  .scroll-hint::after {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 1px;
+    background: var(--gold);
+    opacity: .5;
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    position: relative;
+    z-index: 1;
+    padding: 6rem 3rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: .7rem;
+    color: var(--gold);
+    letter-spacing: .4em;
+    text-transform: uppercase;
+    margin-bottom: 3rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(201,168,76,.4), transparent);
+  }
+
+  /* ── SKILLS GRID ── */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .skill-card {
+    background: rgba(29,52,97,.3);
+    border: 1px solid rgba(201,168,76,.12);
+    border-radius: 4px;
+    padding: 1.8rem;
+    transition: border-color .25s, transform .25s;
+  }
+
+  .skill-card:hover {
+    border-color: rgba(201,168,76,.4);
+    transform: translateY(-3px);
+  }
+
+  .skill-card h3 {
+    font-family: var(--mono);
+    font-size: .7rem;
+    letter-spacing: .25em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+  }
+
+  .tag {
+    font-family: var(--mono);
+    font-size: .72rem;
+    padding: .3rem .7rem;
+    border-radius: 2px;
+    background: rgba(201,168,76,.08);
+    border: 1px solid rgba(201,168,76,.2);
+    color: var(--cream);
+  }
+
+  /* ── TIMELINE ── */
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .tl-item {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 2rem;
+    padding: 2rem 0;
+    border-bottom: 1px solid rgba(201,168,76,.08);
+    position: relative;
+  }
+
+  .tl-item:last-child { border-bottom: none; }
+
+  .tl-date {
+    font-family: var(--mono);
+    font-size: .75rem;
+    color: var(--gold);
+    letter-spacing: .05em;
+    padding-top: .2rem;
+    line-height: 1.5;
+  }
+
+  .tl-content h3 {
+    font-family: var(--serif);
+    font-size: 1.15rem;
+    color: var(--white);
+    margin-bottom: .2rem;
+  }
+
+  .tl-content .tl-role {
+    font-family: var(--mono);
+    font-size: .75rem;
+    color: var(--gold);
+    letter-spacing: .1em;
+    margin-bottom: .6rem;
+  }
+
+  .tl-content p, .tl-content li {
+    font-size: .9rem;
+    color: rgba(240,234,214,.7);
+    line-height: 1.7;
+  }
+
+  .tl-content ul { padding-left: 1.2rem; margin-top: .4rem; }
+  .tl-content li { margin-bottom: .25rem; }
+
+  /* ── PROJECTS ── */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .project-card {
+    background: rgba(17,34,64,.6);
+    border: 1px solid rgba(201,168,76,.12);
+    border-radius: 4px;
+    padding: 2rem;
+    transition: all .25s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .project-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+    opacity: 0;
+    transition: opacity .25s;
+  }
+
+  .project-card:hover { border-color: rgba(201,168,76,.3); transform: translateY(-4px); }
+  .project-card:hover::before { opacity: 1; }
+
+  .project-card h3 {
+    font-family: var(--serif);
+    font-size: 1.1rem;
+    color: var(--white);
+    margin-bottom: .6rem;
+  }
+
+  .project-card p {
+    font-size: .85rem;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  /* ── FORMATION ── */
+  .formation-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .formation-card {
+    background: rgba(29,52,97,.2);
+    border: 1px solid rgba(201,168,76,.12);
+    border-radius: 4px;
+    padding: 1.8rem;
+    transition: border-color .25s;
+  }
+
+  .formation-card:hover { border-color: rgba(201,168,76,.35); }
+
+  .formation-card .year {
+    font-family: var(--mono);
+    font-size: .7rem;
+    color: var(--gold);
+    letter-spacing: .2em;
+    margin-bottom: .6rem;
+  }
+
+  .formation-card h3 {
+    font-family: var(--serif);
+    font-size: 1.05rem;
+    color: var(--white);
+    margin-bottom: .3rem;
+  }
+
+  .formation-card p {
+    font-size: .85rem;
+    color: var(--muted);
+  }
+
+  /* ── CONTACT ── */
+  #contact {
+    padding: 6rem 3rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .contact-title {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 5vw, 4rem);
+    color: var(--white);
+    margin-bottom: 1rem;
+  }
+
+  .contact-subtitle {
+    font-family: var(--sans);
+    font-size: .95rem;
+    color: var(--muted);
+    margin-bottom: 3rem;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .contact-items {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    font-family: var(--mono);
+    font-size: .8rem;
+    color: var(--cream);
+    text-decoration: none;
+    transition: color .25s;
+  }
+  .contact-item:hover { color: var(--gold); }
+
+  .contact-icon {
+    width: 36px; height: 36px;
+    border: 1px solid rgba(201,168,76,.25);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: .9rem;
+    color: var(--gold);
+    transition: all .25s;
+  }
+
+  .contact-item:hover .contact-icon {
+    background: rgba(201,168,76,.1);
+    border-color: var(--gold);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid rgba(201,168,76,.1);
+    padding: 2rem 3rem;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: .7rem;
+    color: var(--muted);
+    letter-spacing: .1em;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity .6s ease, transform .6s ease;
+  }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 700px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    #hero, section { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .tl-item { grid-template-columns: 1fr; gap: .5rem; }
+    .tl-date { border-bottom: 1px solid rgba(201,168,76,.2); padding-bottom: .5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-logo">LA</span>
+  <ul class="nav-links">
+    <li><a href="#competences">Compétences</a></li>
+    <li><a href="#experience">Expérience</a></li>
+    <li><a href="#projets">Projets</a></li>
+    <li><a href="#formation">Formation</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div id="hero">
+  <p class="hero-tag">Marcq-en-Barœul · Disponible</p>
+  <h1 class="hero-name">Ludovic<br><span>AIMÉ</span></h1>
+  <p class="hero-subtitle">
+    Ingénieur Docteur
+    <span class="sep">·</span>
+    Expert Mainframe
+    <span class="sep">·</span>
+    Développeur Web MERN
+  </p>
+  <p class="hero-profile">
+    Expert Mainframe (COBOL, CICS, DB2, z/OS) avec une expérience éprouvée sur des projets bancaires et assurantiels critiques. Profil hybride alliant maîtrise des systèmes legacy et culture du développement moderne — intégration IA, MERN Stack, outillage DevOps.
+  </p>
+  <div class="hero-cta">
+    <a href="#contact" class="btn btn-primary">Me contacter</a>
+    <a href="#experience" class="btn btn-outline">Voir le parcours</a>
+    <a href="CV_Ludovic_AIME.pdf" download class="btn btn-outline">⬇ Télécharger le CV</a>
+  </div>
+  <img class="hero-photo" src="data:image/jpeg;base64,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" alt="Ludovic AIMÉ">
+  <span class="scroll-hint">Scroll</span>
+</div>
+
+<!-- COMPÉTENCES -->
+<section id="competences">
+  <p class="section-label reveal">Compétences</p>
+  <div class="skills-grid">
+    <div class="skill-card reveal">
+      <h3>Mainframe</h3>
+      <div class="skill-tags">
+        <span class="tag">z/OS</span>
+        <span class="tag">TSO/ISPF</span>
+        <span class="tag">COBOL</span>
+        <span class="tag">CICS</span>
+        <span class="tag">JCL</span>
+        <span class="tag">DB2</span>
+        <span class="tag">SQL</span>
+        <span class="tag">VSAM</span>
+        <span class="tag">Analyse</span>
+        <span class="tag">Dev</span>
+        <span class="tag">Tests</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <h3>Web & Full-Stack</h3>
+      <div class="skill-tags">
+        <span class="tag">MongoDB</span>
+        <span class="tag">Express</span>
+        <span class="tag">React</span>
+        <span class="tag">Node.js</span>
+        <span class="tag">HTML</span>
+        <span class="tag">CSS</span>
+        <span class="tag">GitHub Pages</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <h3>Outils & DevOps</h3>
+      <div class="skill-tags">
+        <span class="tag">VS Code</span>
+        <span class="tag">Git / GitHub</span>
+        <span class="tag">PowerShell</span>
+        <span class="tag">Bash</span>
+        <span class="tag">Linux Ubuntu</span>
+        <span class="tag">WSL2</span>
+        <span class="tag">Zowe Explorer</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <h3>IA & Productivité</h3>
+      <div class="skill-tags">
+        <span class="tag">Claude Code</span>
+        <span class="tag">GitHub Copilot</span>
+        <span class="tag">ChatGPT</span>
+        <span class="tag">Microsoft 365</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPÉRIENCE -->
+<section id="experience">
+  <p class="section-label reveal">Expérience professionnelle</p>
+  <div class="timeline">
+
+    <div class="tl-item reveal">
+      <div class="tl-date">09/2000<br>08/2001</div>
+      <div class="tl-content">
+        <h3>TRANSICIEL (SSII) — Agence de Lille</h3>
+        <p class="tl-role">Développeur Mainframe</p>
+        <ul>
+          <li>Recouvrement amiable et contentieux — ACCORD FINANCES (La Madeleine)</li>
+          <li>Cartes de paiement et crédit — FINAREF (Roubaix)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tl-item reveal">
+      <div class="tl-date">02/1997<br>12/1997</div>
+      <div class="tl-content">
+        <h3>SOPRA (SSII) — Agence d'Orléans</h3>
+        <p class="tl-role">Développeur Mainframe</p>
+        <ul>
+          <li>Sécurité Sociale Le Mans — Projet CRISTAL (COBOL/CICS/DB2)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tl-item reveal">
+      <div class="tl-date">03/1996<br>10/1996</div>
+      <div class="tl-content">
+        <h3>SYS-COM — Paris</h3>
+        <p class="tl-role">Développeur Mainframe</p>
+        <ul>
+          <li>Missions chez Groupe Malakoff, France Assurances, Gras Savoye</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tl-item reveal">
+      <div class="tl-date">03/1999<br>09/1999</div>
+      <div class="tl-content">
+        <h3>ALCATEL Réseau d'Entreprise Nord-Ouest</h3>
+        <p class="tl-role">Assistant Directeur Qualité</p>
+        <ul>
+          <li>Gestion réclamations clients (Lotus Notes), Plan Qualité, enquêtes satisfaction</li>
+          <li>Formation du personnel à la qualité (SAP)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tl-item reveal">
+      <div class="tl-date">07/1995<br>12/1995</div>
+      <div class="tl-content">
+        <h3>PENNEL ET FLIPO</h3>
+        <p class="tl-role">Informatique / Qualité Production</p>
+        <ul>
+          <li>Création d'une base de données Access pour le contrôle qualité production</li>
+          <li>Recueil des besoins, conception, réalisation et formation utilisateurs</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tl-item reveal">
+      <div class="tl-date">1992<br>1995</div>
+      <div class="tl-content">
+        <h3>Laboratoire Spectroscopie Hertzienne de Lille</h3>
+        <p class="tl-role">Chercheur — Doctorat</p>
+        <ul>
+          <li>Réalisation d'un spectromètre millimétrique à jet pulsé et à bandes latérales en cavité</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- PROJETS -->
+<section id="projets">
+  <p class="section-label reveal">Projets personnels & formation</p>
+  <div class="projects-grid">
+
+    <div class="project-card reveal">
+      <h3>Raccoont Network</h3>
+      <p>Application réseau social full-stack (MERN). REST API, gestion d'état, déploiement complet.</p>
+      <div class="skill-tags">
+        <span class="tag">MongoDB</span><span class="tag">Express</span>
+        <span class="tag">React</span><span class="tag">Node.js</span>
+      </div>
+    </div>
+
+    <div class="project-card reveal">
+      <h3>Site Les Lucioles</h3>
+      <p>Site de présentation du gîte familial à La Croix-Valmer. En production sur GitHub Pages.</p>
+      <div class="skill-tags">
+        <span class="tag">HTML</span><span class="tag">CSS</span>
+        <span class="tag">GitHub Pages</span><span class="tag">Git</span>
+      </div>
+      <div style="margin-top:1rem">
+        <a href="https://ludovicaime.github.io" target="_blank" style="font-family:var(--mono);font-size:.72rem;color:var(--gold);text-decoration:none;letter-spacing:.05em;">→ Voir le site</a>
+      </div>
+    </div>
+
+    <div class="project-card reveal">
+      <h3>IBM Z Xplore</h3>
+      <p>Connexion z/OS via Zowe Explorer (VS Code). Navigation datasets en environnement réel. Workflow moderne du développeur mainframe.</p>
+      <div class="skill-tags">
+        <span class="tag">z/OS</span><span class="tag">Zowe</span>
+        <span class="tag">VS Code</span>
+      </div>
+    </div>
+
+    <div class="project-card reveal">
+      <h3>IA & Outils Dev</h3>
+      <p>Intégration quotidienne de l'IA dans le workflow de développement : génération, refactoring, documentation, automatisation.</p>
+      <div class="skill-tags">
+        <span class="tag">Claude Code</span><span class="tag">Copilot</span>
+        <span class="tag">WSL2</span><span class="tag">Git/GitHub</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FORMATION -->
+<section id="formation">
+  <p class="section-label reveal">Formation</p>
+  <div class="formation-grid">
+
+    <div class="formation-card reveal">
+      <p class="year">1992 — 1995</p>
+      <h3>Doctorat Sciences Physiques</h3>
+      <p>Université de Lille — Spectroscopie Hertzienne</p>
+    </div>
+
+    <div class="formation-card reveal">
+      <p class="year">1989 — 1992</p>
+      <h3>Ingénieur ISEN</h3>
+      <p>Institut Supérieur d'Électronique du Nord</p>
+    </div>
+
+    <div class="formation-card reveal">
+      <p class="year">1998 — 1999</p>
+      <h3>Master Management Industriel</h3>
+      <p>Option Qualité</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <h2 class="contact-title reveal">Travaillons ensemble</h2>
+  <p class="contact-subtitle reveal">Disponible pour des missions mainframe (COBOL/CICS/DB2) ou des projets full-stack en région Hauts-de-France.</p>
+  <div class="contact-items reveal">
+    <a href="/cdn-cgi/l/email-protection#a0ecd5c4cfd6c9c3cacd8ec1c9cdc5e0ccc1d0cfd3d4c58ecec5d4" class="contact-item">
+      <span class="contact-icon">✉</span>
+      <span class="__cf_email__" data-cfemail="d69aa3b2b9a0bfb5bcbbf8b7bfbbb396bab7a6b9a5a2b3f8b8b3a2">[email&#160;protected]</span>
+    </a>
+    <a href="tel:+33608624815" class="contact-item">
+      <span class="contact-icon">☎</span>
+      06.08.62.48.15
+    </a>
+    <a href="https://linkedin.com/in/ludovic-aime" target="_blank" class="contact-item">
+      <span class="contact-icon">in</span>
+      linkedin.com/in/ludovic-aime
+    </a>
+    <span class="contact-item">
+      <span class="contact-icon">📍</span>
+      59700 Marcq-en-Barœul
+    </span>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 Ludovic AIMÉ</span>
+  &nbsp;·&nbsp;
+  <span>Expert Mainframe · Développeur Web MERN</span>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) =>
